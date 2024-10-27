@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const modelSelect = document.getElementById('model-select');
-    const personalitySelect = document.getElementById('personality-select');
-    const changePersonalityBtn = document.getElementById('change-personality');
     const gpt4oRemaining = document.getElementById('gpt4o-remaining');
 
     // Function to update remaining GPT-4O uses
@@ -29,28 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial update of remaining uses
     updateGPT4ORemainingUses();
 
-    // Function to add a system message
-    function addSystemMessage(message) {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', 'ai-message', 'system-message');
-        messageDiv.innerHTML = `<em>${message}</em>`;
-        chatMessages.appendChild(messageDiv);
-        scrollToBottom();
-    }
-
-    // Handle personality change
-    changePersonalityBtn.addEventListener('click', async function() {
-        const newPersonality = personalitySelect.value;
-        try {
-            const response = await fetch(`/get-personality-greeting?personality=${newPersonality}`);
-            const data = await response.json();
-            addSystemMessage(data.greeting);
-        } catch (error) {
-            console.error('Error changing personality:', error);
-            addSystemMessage('Personality changed. How can I help you?');
-        }
-    });
-
     chatForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -67,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `message=${encodeURIComponent(message)}&model=${encodeURIComponent(modelSelect.value)}&personality=${encodeURIComponent(personalitySelect.value)}`
+                body: `message=${encodeURIComponent(message)}&model=${encodeURIComponent(modelSelect.value)}`
             });
 
             const data = await response.json();
