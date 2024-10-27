@@ -3,6 +3,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const modelSelect = document.getElementById('model-select');
+    const gpt4oRemaining = document.getElementById('gpt4o-remaining');
+
+    // Function to update remaining GPT-4O uses
+    async function updateGPT4ORemainingUses() {
+        try {
+            const response = await fetch('/remaining-gpt4o');
+            const data = await response.json();
+            if (modelSelect.value === 'gpt-4o') {
+                gpt4oRemaining.textContent = `${data.remaining}/5 uses remaining`;
+                gpt4oRemaining.style.display = 'inline';
+            } else {
+                gpt4oRemaining.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error fetching remaining uses:', error);
+        }
+    }
+
+    // Update remaining uses when model is changed
+    modelSelect.addEventListener('change', updateGPT4ORemainingUses);
+
+    // Initial update of remaining uses
+    updateGPT4ORemainingUses();
 
     chatForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -27,8 +50,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (response.ok) {
                 addMessage(data.response, 'ai');
+                // Update remaining uses after successful GPT-4O request
+                if (modelSelect.value === 'gpt-4o') {
+                    updateGPT4ORemainingUses();
+                }
             } else {
-                addMessage('Sorry, something went wrong. Please try again.', 'ai');
+                addMessage(data.error || 'Sorry, something went wrong. Please try again.', 'ai');
             }
         } catch (error) {
             addMessage('Error connecting to the server. Please try again.', 'ai');
@@ -38,31 +65,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function addMessage(message, sender) {
-        console.log('Processing message:', message);
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', `${sender}-message`);
         
         // Process the message content for code blocks
         const processedContent = processCodeBlocks(message);
-        console.log('Processed content:', processedContent);
         messageDiv.innerHTML = processedContent;
         
         chatMessages.appendChild(messageDiv);
         
         // Initialize syntax highlighting for any code blocks
         messageDiv.querySelectorAll('pre code').forEach((block) => {
-            console.log('Applying syntax highlighting to:', block.textContent);
             hljs.highlightElement(block);
         });
     }
 
     function processCodeBlocks(text) {
-        console.log('Original text:', text);
         let processedText = text;
 
         // Replace triple backtick code blocks first
         processedText = processedText.replace(/```([\w]*)?([^`]+)```/g, (match, language, code) => {
-            console.log('Found code block:', { language, code });
             const lang = language ? language.trim() : 'plaintext';
             const wrapper = document.createElement('div');
             wrapper.className = 'code-block-wrapper';
@@ -75,14 +97,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Then handle inline code blocks (single backticks)
         processedText = processedText.replace(/`([^`]+)`/g, (match, code) => {
-            console.log('Found inline code:', code);
             return `<code class="inline-code">${escapeHtml(code.trim())}</code>`;
         });
 
         // Replace newlines with <br> tags for regular text
         processedText = processedText.replace(/\n/g, '<br>');
         
-        console.log('Final processed text:', processedText);
         return processedText;
     }
 
@@ -93,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function addCopyButton(wrapper) {
-        console.log('Adding copy button to wrapper:', wrapper);
         const button = document.createElement('button');
         button.className = 'copy-button';
         button.textContent = 'Copy';
@@ -102,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', async () => {
             const codeBlock = wrapper.querySelector('code');
             const text = codeBlock.textContent;
-            console.log('Copying text:', text);
             
             try {
                 await navigator.clipboard.writeText(text);
