@@ -32,13 +32,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Clear previous image if any
                 generatedImageDiv.innerHTML = '';
                 
-                // Create and display new image
+                // Create image element with download functionality
                 const img = document.createElement('img');
                 img.src = data.url;
                 img.alt = 'Generated image';
                 img.className = 'img-fluid rounded';
                 img.style.maxHeight = '400px';
-                generatedImageDiv.appendChild(img);
+                img.style.cursor = 'pointer'; // Add pointer cursor to indicate clickable
+
+                // Create wrapper anchor tag for download
+                const downloadLink = document.createElement('a');
+                downloadLink.href = data.url;
+                downloadLink.download = 'generated-image.png'; // Default filename
+                downloadLink.appendChild(img);
+
+                // Add click handler
+                downloadLink.addEventListener('click', (e) => {
+                    // Let the download happen naturally through the anchor tag
+                    // The download attribute will trigger the download instead of navigation
+                });
+
+                generatedImageDiv.appendChild(downloadLink);
                 
                 // Clear input
                 promptInput.value = '';
