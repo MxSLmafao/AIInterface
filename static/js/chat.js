@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatForm = document.getElementById('chat-form');
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
+    const modelSelect = document.getElementById('model-select');
 
     chatForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `message=${encodeURIComponent(message)}`
+                body: `message=${encodeURIComponent(message)}&model=${encodeURIComponent(modelSelect.value)}`
             });
 
             const data = await response.json();

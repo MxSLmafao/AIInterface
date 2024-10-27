@@ -4,9 +4,9 @@ from openai import OpenAI
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
-def send_openai_request(prompt: str) -> str:
+def send_openai_request(prompt: str, model: str = "gpt-4") -> str:
     response = openai_client.chat.completions.create(
-        model="gpt-4",
+        model=model,
         messages=[{"role": "user", "content": prompt}]
     )
     content = response.choices[0].message.content
