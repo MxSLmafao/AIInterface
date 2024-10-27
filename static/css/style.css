@@ -1,6 +1,26 @@
+/* Define the gradient animation */
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 .gradient-background {
     min-height: 100vh;
-    background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-purple) 100%);
+    background: linear-gradient(-45deg, 
+        var(--bs-primary) 0%, 
+        var(--bs-purple) 25%, 
+        var(--bs-indigo) 50%,
+        var(--bs-primary-rgb) 75%, 
+        var(--bs-purple) 100%);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
 
 .chat-container {
@@ -12,6 +32,8 @@
     background: rgba(33, 37, 41, 0.95);
     backdrop-filter: blur(10px);
     border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 #chat-messages {
@@ -25,6 +47,7 @@
     padding: 0.75rem;
     border-radius: 10px;
     max-width: 80%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .user-message {
