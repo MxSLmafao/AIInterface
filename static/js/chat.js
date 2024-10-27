@@ -60,22 +60,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function processCodeBlocks(text) {
         console.log('Original text:', text);
-        
-        // Replace markdown code blocks (```)
-        let processedText = text.replace(/```([\w]*)\n?([\s\S]*?)```/g, (match, language, code) => {
+        let processedText = text;
+
+        // Replace triple backtick code blocks first
+        processedText = processedText.replace(/```([\w]*)?([^`]+)```/g, (match, language, code) => {
             console.log('Found code block:', { language, code });
+            const lang = language ? language.trim() : 'plaintext';
             return `<div class="code-block-wrapper">
-                        <pre class="code-block"><code class="language-${language || 'plaintext'}">${escapeHtml(code.trim())}</code></pre>
+                        <pre class="code-block"><code class="language-${lang}">${escapeHtml(code.trim())}</code></pre>
                     </div>`;
         });
-        
-        // Replace inline code blocks (`)
+
+        // Then handle inline code blocks (single backticks)
         processedText = processedText.replace(/`([^`]+)`/g, (match, code) => {
             console.log('Found inline code:', code);
-            return `<code class="inline-code">${escapeHtml(code)}</code>`;
+            return `<code class="inline-code">${escapeHtml(code.trim())}</code>`;
         });
-        
-        // Replace newlines with <br> tags for regular text, but only outside of code blocks
+
+        // Replace newlines with <br> tags for regular text
         processedText = processedText.replace(/\n/g, '<br>');
         
         console.log('Final processed text:', processedText);
