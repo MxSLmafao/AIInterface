@@ -37,17 +37,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function addMessage(message, sender) {
+        console.log('Processing message:', message);
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', `${sender}-message`);
         
         // Process the message content for code blocks
         const processedContent = processCodeBlocks(message);
+        console.log('Processed content:', processedContent);
         messageDiv.innerHTML = processedContent;
         
         chatMessages.appendChild(messageDiv);
         
         // Initialize syntax highlighting for any code blocks
         messageDiv.querySelectorAll('pre code').forEach((block) => {
+            console.log('Applying syntax highlighting to:', block.textContent);
             hljs.highlightElement(block);
         });
         
@@ -56,20 +59,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function processCodeBlocks(text) {
+        console.log('Original text:', text);
+        
         // Replace markdown code blocks (```)
-        text = text.replace(/```(\w*)\n([\s\S]*?)```/g, (match, language, code) => {
+        let processedText = text.replace(/```([\w]*)\n?([\s\S]*?)```/g, (match, language, code) => {
+            console.log('Found code block:', { language, code });
             return `<div class="code-block-wrapper">
-                        <pre><code class="language-${language}">${escapeHtml(code.trim())}</code></pre>
+                        <pre class="code-block"><code class="language-${language || 'plaintext'}">${escapeHtml(code.trim())}</code></pre>
                     </div>`;
         });
         
         // Replace inline code blocks (`)
-        text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+        processedText = processedText.replace(/`([^`]+)`/g, (match, code) => {
+            console.log('Found inline code:', code);
+            return `<code class="inline-code">${escapeHtml(code)}</code>`;
+        });
         
-        // Replace newlines with <br> tags for regular text
-        text = text.replace(/\n/g, '<br>');
+        // Replace newlines with <br> tags for regular text, but only outside of code blocks
+        processedText = processedText.replace(/\n/g, '<br>');
         
-        return text;
+        console.log('Final processed text:', processedText);
+        return processedText;
     }
 
     function escapeHtml(text) {
@@ -79,23 +89,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function addCopyButton(wrapper) {
+        console.log('Adding copy button to wrapper:', wrapper);
+        // Remove any existing copy button first
+        const existingButton = wrapper.querySelector('.copy-button');
+        if (existingButton) {
+            existingButton.remove();
+        }
+
         const button = document.createElement('button');
         button.className = 'copy-button';
         button.textContent = 'Copy';
+        button.setAttribute('title', 'Copy to clipboard');
         
         button.addEventListener('click', async () => {
             const codeBlock = wrapper.querySelector('code');
             const text = codeBlock.textContent;
+            console.log('Copying text:', text);
             
             try {
                 await navigator.clipboard.writeText(text);
                 button.textContent = 'Copied!';
+                button.classList.add('copy-success');
                 setTimeout(() => {
                     button.textContent = 'Copy';
+                    button.classList.remove('copy-success');
                 }, 2000);
             } catch (err) {
                 console.error('Failed to copy text:', err);
                 button.textContent = 'Failed';
+                button.classList.add('copy-failed');
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copy-failed');
+                }, 2000);
             }
         });
         
