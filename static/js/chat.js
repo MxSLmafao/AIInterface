@@ -3,29 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const modelSelect = document.getElementById('model-select');
-    const gpt4oRemaining = document.getElementById('gpt4o-remaining');
-
-    // Function to update remaining GPT-4O uses
-    async function updateGPT4ORemainingUses() {
-        try {
-            const response = await fetch('/remaining-gpt4o');
-            const data = await response.json();
-            if (modelSelect.value === 'gpt-4o') {
-                gpt4oRemaining.textContent = `${data.remaining}/5 uses remaining`;
-                gpt4oRemaining.style.display = 'inline';
-            } else {
-                gpt4oRemaining.style.display = 'none';
-            }
-        } catch (error) {
-            console.error('Error fetching remaining uses:', error);
-        }
-    }
-
-    // Update remaining uses when model is changed
-    modelSelect.addEventListener('change', updateGPT4ORemainingUses);
-
-    // Initial update of remaining uses
-    updateGPT4ORemainingUses();
 
     chatForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -50,9 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (response.ok) {
                 addMessage(data.response, 'ai');
-                if (modelSelect.value === 'gpt-4o') {
-                    updateGPT4ORemainingUses();
-                }
             } else {
                 addMessage(data.error || 'Sorry, something went wrong. Please try again.', 'ai');
             }
