@@ -101,6 +101,33 @@
     font-size: 0.9em;
 }
 
+/* Markdown formatting styles */
+.message a {
+    color: var(--bs-info);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.message a:hover {
+    color: var(--bs-info-emphasis);
+    text-decoration: underline;
+}
+
+.message strong {
+    color: var(--bs-emphasis-color);
+}
+
+.message em {
+    color: var(--bs-emphasis-color);
+    font-style: italic;
+}
+
+/* LaTeX math styling */
+.mjx-chtml {
+    margin: 0 0.2em;
+    color: var(--bs-emphasis-color);
+}
+
 .copy-button {
     position: absolute;
     top: 0.5rem;

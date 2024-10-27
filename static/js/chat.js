@@ -68,22 +68,55 @@ document.addEventListener('DOMContentLoaded', function() {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', `${sender}-message`);
         
-        // Process the message content for code blocks
-        const processedContent = processCodeBlocks(message);
+        // Process the message content for formatting
+        const processedContent = processFormatting(message);
         messageDiv.innerHTML = processedContent;
         
         chatMessages.appendChild(messageDiv);
         
-        // Initialize syntax highlighting for any code blocks
+        // Initialize syntax highlighting for code blocks
         messageDiv.querySelectorAll('pre code').forEach((block) => {
             hljs.highlightElement(block);
         });
+
+        // Typeset any math content
+        if (window.MathJax) {
+            MathJax.typesetPromise([messageDiv]);
+        }
+    }
+
+    function processFormatting(text) {
+        let processedText = text;
+
+        // Handle code blocks first (to prevent interference with other formatting)
+        processedText = processCodeBlocks(processedText);
+
+        // Handle LaTeX math expressions
+        processedText = processedText.replace(/\\\((.*?)\\\)/g, (match, expr) => {
+            return `\\(${expr}\\)`;
+        });
+
+        // Handle Markdown formatting
+        // Bold text
+        processedText = processedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Italic text
+        processedText = processedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Links with target="_blank"
+        processedText = processedText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, 
+            '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+        // Replace newlines with <br> tags for regular text
+        processedText = processedText.replace(/\n/g, '<br>');
+        
+        return processedText;
     }
 
     function processCodeBlocks(text) {
         let processedText = text;
 
-        // Replace triple backtick code blocks first
+        // Replace triple backtick code blocks
         processedText = processedText.replace(/```([\w]*)?([^`]+)```/g, (match, language, code) => {
             const lang = language ? language.trim() : 'plaintext';
             const wrapper = document.createElement('div');
@@ -95,14 +128,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return wrapper.outerHTML;
         });
 
-        // Then handle inline code blocks (single backticks)
+        // Handle inline code blocks (single backticks)
         processedText = processedText.replace(/`([^`]+)`/g, (match, code) => {
             return `<code class="inline-code">${escapeHtml(code.trim())}</code>`;
         });
 
-        // Replace newlines with <br> tags for regular text
-        processedText = processedText.replace(/\n/g, '<br>');
-        
         return processedText;
     }
 
@@ -141,7 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Insert button at the beginning of the wrapper
         wrapper.insertBefore(button, wrapper.firstChild);
     }
 
