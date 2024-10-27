@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (response.ok) {
                 addMessage(data.response, 'ai');
-                // Update remaining uses after successful GPT-4O request
                 if (modelSelect.value === 'gpt-4o') {
                     updateGPT4ORemainingUses();
                 }
@@ -81,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Typeset any math content
         if (window.MathJax) {
-            MathJax.typesetPromise([messageDiv]);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, messageDiv]);
         }
     }
 
@@ -91,12 +90,20 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle code blocks first (to prevent interference with other formatting)
         processedText = processCodeBlocks(processedText);
 
-        // Handle LaTeX math expressions (both $ and \( formats)
+        // Handle LaTeX display math expressions
+        processedText = processedText.replace(/\$\$(.*?)\$\$/g, (match, expr) => {
+            return `<div class="math-display">\\[${expr}\\]</div>`;
+        });
+        processedText = processedText.replace(/\\\[(.*?)\\\]/g, (match, expr) => {
+            return `<div class="math-display">\\[${expr}\\]</div>`;
+        });
+
+        // Handle LaTeX inline math expressions
         processedText = processedText.replace(/\$([^$]+)\$/g, (match, expr) => {
-            return `\\(${expr}\\)`;
+            return `<span class="math-inline">\\(${expr}\\)</span>`;
         });
         processedText = processedText.replace(/\\\((.*?)\\\)/g, (match, expr) => {
-            return `\\(${expr}\\)`;
+            return `<span class="math-inline">\\(${expr}\\)</span>`;
         });
 
         // Handle Markdown formatting

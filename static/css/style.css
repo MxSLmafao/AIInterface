@@ -68,6 +68,32 @@
     padding: 1rem;
 }
 
+/* LaTeX math styling */
+.math-display {
+    display: block;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    overflow-x: auto;
+    text-align: center;
+    color: var(--bs-emphasis-color);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.math-inline {
+    display: inline-block;
+    margin: 0 0.2em;
+    padding: 0 0.1em;
+    vertical-align: middle;
+    color: var(--bs-emphasis-color);
+}
+
+.mjx-chtml {
+    margin: 0.5em 0 !important;
+    color: var(--bs-emphasis-color) !important;
+    font-size: 1.1em !important;
+}
+
 /* Code block styling */
 .code-block-wrapper {
     position: relative;
@@ -120,12 +146,6 @@
 .message em {
     color: var(--bs-emphasis-color);
     font-style: italic;
-}
-
-/* LaTeX math styling */
-.mjx-chtml {
-    margin: 0 0.2em;
-    color: var(--bs-emphasis-color);
 }
 
 .copy-button {
