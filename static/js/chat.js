@@ -91,7 +91,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle code blocks first (to prevent interference with other formatting)
         processedText = processCodeBlocks(processedText);
 
-        // Handle LaTeX math expressions
+        // Handle LaTeX math expressions (both $ and \( formats)
+        processedText = processedText.replace(/\$([^$]+)\$/g, (match, expr) => {
+            return `\\(${expr}\\)`;
+        });
         processedText = processedText.replace(/\\\((.*?)\\\)/g, (match, expr) => {
             return `\\(${expr}\\)`;
         });
