@@ -12,7 +12,7 @@ def index():
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.form.get('message')
-    model = request.form.get('model', 'gpt-4')  # Default to gpt-4 if not specified
+    model = request.form.get('model', 'gpt-3.5-turbo')  # Default to gpt-3.5-turbo if not specified
     
     if not user_message:
         return jsonify({'error': 'No message provided'}), 400
