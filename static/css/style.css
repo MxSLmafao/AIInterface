@@ -68,6 +68,39 @@
     padding: 1rem;
 }
 
+/* Code block styling */
+.code-block-wrapper {
+    position: relative;
+    margin: 1rem 0;
+}
+
+.code-block {
+    background: var(--bs-dark) !important;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0;
+    overflow-x: auto;
+}
+
+.copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    background: var(--bs-dark);
+    border: 1px solid var(--bs-gray-700);
+    color: var(--bs-gray-300);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.copy-button:hover {
+    background: var(--bs-gray-700);
+    color: var(--bs-white);
+}
+
 /* Scrollbar styling */
 #chat-messages::-webkit-scrollbar {
     width: 8px;
