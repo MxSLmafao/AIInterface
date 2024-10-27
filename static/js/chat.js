@@ -53,9 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Applying syntax highlighting to:', block.textContent);
             hljs.highlightElement(block);
         });
-        
-        // Add copy functionality to code blocks
-        messageDiv.querySelectorAll('.code-block-wrapper').forEach(addCopyButton);
     }
 
     function processCodeBlocks(text) {
@@ -66,9 +63,13 @@ document.addEventListener('DOMContentLoaded', function() {
         processedText = processedText.replace(/```([\w]*)?([^`]+)```/g, (match, language, code) => {
             console.log('Found code block:', { language, code });
             const lang = language ? language.trim() : 'plaintext';
-            return `<div class="code-block-wrapper">
-                        <pre class="code-block"><code class="language-${lang}">${escapeHtml(code.trim())}</code></pre>
-                    </div>`;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-block-wrapper';
+            
+            wrapper.innerHTML = `<pre class="code-block"><code class="language-${lang}">${escapeHtml(code.trim())}</code></pre>`;
+            addCopyButton(wrapper);
+            
+            return wrapper.outerHTML;
         });
 
         // Then handle inline code blocks (single backticks)
@@ -92,12 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function addCopyButton(wrapper) {
         console.log('Adding copy button to wrapper:', wrapper);
-        // Remove any existing copy button first
-        const existingButton = wrapper.querySelector('.copy-button');
-        if (existingButton) {
-            existingButton.remove();
-        }
-
         const button = document.createElement('button');
         button.className = 'copy-button';
         button.textContent = 'Copy';
@@ -127,7 +122,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        wrapper.appendChild(button);
+        // Insert button at the beginning of the wrapper
+        wrapper.insertBefore(button, wrapper.firstChild);
     }
 
     function scrollToBottom() {
