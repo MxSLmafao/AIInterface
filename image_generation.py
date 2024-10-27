@@ -11,10 +11,10 @@ def generate_image(prompt: str) -> dict:
     Returns a dictionary with 'url' or 'error' key
     """
     headers = {'api-key': DEEPAI_API_KEY}
-    data = {'text': prompt}
+    data = {'text': prompt}  # Changed from prompt to match API docs
     
     try:
-        response = requests.post(DEEPAI_API_URL, headers=headers, data=data)
+        response = requests.post(DEEPAI_API_URL, data=data, headers=headers)
         response.raise_for_status()
         result = response.json()
         return {'url': result.get('output_url')}
