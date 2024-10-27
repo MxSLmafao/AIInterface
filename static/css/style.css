@@ -22,7 +22,7 @@
         var(--bs-dark-blue) 75%,
         var(--bs-dark) 100%);
     background-size: 300% 300%;
-    animation: gradient 15s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    animation: gradient 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 .chat-container {
