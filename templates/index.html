@@ -40,14 +40,26 @@
         <div class="container py-5">
             <div class="chat-container">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0">AI Chat Assistant</h3>
-                        <div class="d-flex align-items-center gap-2">
-                            <select id="model-select" class="form-select" style="width: auto;">
-                                <option value="gpt-3.5-turbo" selected>GPT-3.5 Turbo</option>
-                                <option value="gpt-4o">GPT-4O</option>
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h3 class="mb-0">AI Chat Assistant</h3>
+                            <div class="d-flex align-items-center gap-2">
+                                <select id="model-select" class="form-select" style="width: auto;">
+                                    <option value="gpt-3.5-turbo" selected>GPT-3.5 Turbo</option>
+                                    <option value="gpt-4o">GPT-4O</option>
+                                </select>
+                                <span id="gpt4o-remaining" class="badge bg-info"></span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <select id="personality-select" class="form-select">
+                                <option value="default" selected>Default Assistant</option>
+                                <option value="professor">Professor</option>
+                                <option value="poet">Creative Poet</option>
+                                <option value="coder">Code Expert</option>
+                                <option value="friend">Friendly Chat</option>
                             </select>
-                            <span id="gpt4o-remaining" class="badge bg-info"></span>
+                            <button id="change-personality" class="btn btn-outline-secondary">Change Personality</button>
                         </div>
                     </div>
                     <div class="card-body" id="chat-messages">

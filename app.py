@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template, request, jsonify, session
 from chat_request import send_openai_request
+from personalities import get_personality
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY") or "a secret key"
@@ -19,6 +20,7 @@ def index():
 def chat():
     user_message = request.form.get('message')
     model = request.form.get('model', 'gpt-3.5-turbo')
+    personality = request.form.get('personality', 'default')
     
     if not user_message:
         return jsonify({'error': 'No message provided'}), 400
@@ -32,7 +34,7 @@ def chat():
         session['gpt4o_count'] = session.get('gpt4o_count', 0) + 1
     
     try:
-        ai_response = send_openai_request(user_message, model)
+        ai_response = send_openai_request(user_message, model, personality)
         return jsonify({'response': ai_response})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -42,3 +44,9 @@ def remaining_gpt4o():
     used = session.get('gpt4o_count', 0)
     remaining = max(0, 5 - used)
     return jsonify({'remaining': remaining, 'used': used})
+
+@app.route('/get-personality-greeting', methods=['GET'])
+def get_personality_greeting():
+    personality_id = request.args.get('personality', 'default')
+    personality = get_personality(personality_id)
+    return jsonify({'greeting': personality['greeting']})
