@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Interface</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="gradient-background">
+        <div class="container py-5">
+            <div class="chat-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0">AI Chat Assistant</h3>
+                    </div>
+                    <div class="card-body" id="chat-messages">
+                        <div class="welcome-message">
+                            <p>Hello! How can I help you today?</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <form id="chat-form" class="d-flex gap-2">
+                            <input type="text" class="form-control" id="user-input" placeholder="Type your message...">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/chat.js"></script>
+</body>
+</html>
